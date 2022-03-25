@@ -162,10 +162,9 @@ fn print_changed_files(
             EXIT_ERROR.store(true, Ordering::Relaxed);
         }
 
-        // let current_file_path = file_path.to_str().unwrap().to_owned();
-        let current_file_path = file_path.display().to_string();
+        let current_file_path = file_path.to_str().unwrap_or_default();
 
-        if !should_ignore_current_file(&options.ignored_files, &current_file_path) {
+        if !should_ignore_current_file(&options.ignored_files, current_file_path) {
             let file_name = get_file_name(file_path, &options.starting_paths);
             eprintln!("  * [UNFORMATTED FILE] {file_name}")
         }
