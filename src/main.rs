@@ -3,12 +3,12 @@ use indoc::indoc;
 use once_cell::sync::Lazy;
 use rayon::prelude::*;
 use rustywind::options::{Options, WriteMode};
+use std::collections::HashSet;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering;
-use std::collections::HashSet;
 
 static EXIT_ERROR: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 
@@ -174,8 +174,11 @@ fn print_changed_files(
 
 /// Return a boolean indicating whether the file should be ignored
 fn should_ignore_current_file(ignored_files: &HashSet<String>, current_file: &str) -> bool {
-    let file_name_clean = current_file.split("/").last().unwrap();
-    return ignored_files.len() > 0 && ignored_files.contains(file_name_clean);
+    current_file
+        .split('/')
+        .last()
+        .map(|file_name_clean| ignored_files.contains(file_name_clean))
+        .unwrap_or(false)
 }
 
 fn write_to_file(file_path: &Path, sorted_contents: &str, options: &Options) {
