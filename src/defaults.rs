@@ -9,6 +9,7 @@ pub static RE: Lazy<Regex> = Lazy::new(|| {
 pub static SORTER: Lazy<HashMap<String, usize>> = Lazy::new(|| {
     vec![
         "container",
+        "-container",
         "border-box",
         "box-content",
         "block",
